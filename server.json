@@ -1,0 +1,31 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.christian140903-sudo/postcondition-mcp",
+  "description": "Outcome verification for AI agents with constrained verifiers and tamper-evident receipts.",
+  "repository": {
+    "url": "https://github.com/christian140903-sudo/postcondition-mcp",
+    "source": "github"
+  },
+  "version": "0.1.0",
+  "packages": [
+    {
+      "registryType": "npm",
+      "identifier": "postcondition-mcp",
+      "version": "0.1.0",
+      "transport": {
+        "type": "stdio"
+      },
+      "runtimeHint": "npx",
+      "runtimeArguments": ["-y"],
+      "packageArguments": ["serve"],
+      "environmentVariables": [
+        {
+          "name": "POSTCONDITION_DB",
+          "description": "Optional absolute path to the local SQLite database.",
+          "isRequired": false,
+          "isSecret": false
+        }
+      ]
+    }
+  ]
+}

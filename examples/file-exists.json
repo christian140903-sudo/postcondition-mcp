@@ -1,0 +1,9 @@
+{
+  "statement": "The release archive exists after the build",
+  "subject": "release artifact",
+  "verifier": {
+    "kind": "file",
+    "path": "./dist/release.tgz",
+    "check": { "op": "exists" }
+  }
+}

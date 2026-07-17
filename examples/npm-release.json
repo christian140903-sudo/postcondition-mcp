@@ -1,0 +1,9 @@
+{
+  "statement": "soul-mcp version 4.0.1 is visible in the public npm registry",
+  "subject": "npm:soul-mcp@4.0.1",
+  "verifier": {
+    "kind": "npm",
+    "package": "soul-mcp",
+    "check": { "op": "version_exists", "version": "4.0.1" }
+  }
+}

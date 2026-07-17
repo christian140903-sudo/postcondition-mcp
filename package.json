@@ -1,0 +1,80 @@
+{
+  "name": "postcondition-mcp",
+  "version": "0.1.0",
+  "description": "Outcome verification for AI agents. Declare what should change, observe the world independently, and issue hash-chained receipts.",
+  "type": "module",
+  "main": "dist/src/index.js",
+  "types": "dist/src/index.d.ts",
+  "bin": {
+    "postcondition": "dist/src/index.js",
+    "postcondition-mcp": "dist/src/index.js"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/src/index.d.ts",
+      "import": "./dist/src/index.js"
+    }
+  },
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/src/index.js serve",
+    "test": "npm run build && node --test dist/test/*.test.js",
+    "test:coverage": "npm run build && node --experimental-test-coverage --test dist/test/*.test.js",
+    "prepack": "npm run build",
+    "smoke:pack": "node scripts/release-smoke.mjs",
+    "prepublishOnly": "npm run test && npm run smoke:pack"
+  },
+  "keywords": [
+    "mcp",
+    "ai-agent",
+    "verification",
+    "postcondition",
+    "outcome",
+    "receipts",
+    "model-context-protocol",
+    "agent-governance",
+    "local-first",
+    "audit-log",
+    "typescript"
+  ],
+  "author": "Christian Bucher",
+  "contributors": [
+    "Miguel (AI systems co-builder, under human review)"
+  ],
+  "license": "MIT",
+  "files": [
+    "dist/src",
+    "examples",
+    "docs",
+    "server.json",
+    "README.md",
+    "CHANGELOG.md",
+    "SECURITY.md",
+    "LICENSE"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/christian140903-sudo/postcondition-mcp.git"
+  },
+  "bugs": {
+    "url": "https://github.com/christian140903-sudo/postcondition-mcp/issues"
+  },
+  "homepage": "https://github.com/christian140903-sudo/postcondition-mcp#readme",
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.26.0",
+    "better-sqlite3": "^12.6.0",
+    "zod": "^3.25.0"
+  },
+  "devDependencies": {
+    "@types/better-sqlite3": "^7.6.0",
+    "@types/node": "^22.0.0",
+    "typescript": "^5.7.0"
+  },
+  "mcpName": "io.github.christian140903-sudo/postcondition-mcp"
+}

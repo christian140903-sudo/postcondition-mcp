@@ -1,0 +1,26 @@
+name: Verifier or feature proposal
+description: Propose a narrow observable outcome or lifecycle improvement
+title: "[Proposal]: "
+labels: [enhancement]
+body:
+  - type: textarea
+    id: outcome
+    attributes:
+      label: Observable world state
+      description: What should be independently observable after an action?
+    validations:
+      required: true
+  - type: textarea
+    id: access
+    attributes:
+      label: Required access and risks
+      description: Describe filesystem, process, network, authentication, and sensitive-data needs.
+    validations:
+      required: true
+  - type: textarea
+    id: unknown
+    attributes:
+      label: Unknown behaviour
+      description: When must this return unknown instead of satisfied or violated?
+    validations:
+      required: true
