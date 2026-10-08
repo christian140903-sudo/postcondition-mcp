@@ -6,6 +6,16 @@ All notable changes to this project are documented here. The format follows
 
 ## [Unreleased]
 
+### Security
+
+- Raise the `@modelcontextprotocol/sdk` floor to `^1.32.1` and refresh the
+  lockfile (SDK 1.29.0 -> 1.32.1 with proxy-addr, ip-address, fast-uri, hono,
+  @hono/node-server and qs). `npm audit --omit=dev` on a fresh clone goes from
+  7 findings (1 critical, 3 high, 3 moderate; all through the SDK's HTTP and
+  OAuth parts, which the stdio server does not use) to 0. No MCP tool, SDK or
+  CLI behaviour changes; the npm release 0.1.0 is unaffected until the next
+  publish.
+
 ## [0.1.0] - 2026-07-17
 
 ### Added
