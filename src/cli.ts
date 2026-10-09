@@ -1,8 +1,11 @@
+import { existsSync } from 'node:fs';
 import { readFile } from 'node:fs/promises';
 import { parseArgs } from 'node:util';
+import Database from 'better-sqlite3';
 import { PostconditionRuntime } from './runtime.js';
 import { POSTCONDITION_VERSION } from './server.js';
-import type { AttestationInput, DefineContractInput, Verdict } from './types.js';
+import { getDefaultDbPath } from './util.js';
+import type { AttestationInput, DefineContractInput, LedgerVerification, Verdict } from './types.js';
 
 const HELP = `Postcondition ${POSTCONDITION_VERSION} — outcome verification for AI agents
 
@@ -18,12 +21,46 @@ Usage:
   postcondition status
   postcondition verify-ledger
 
+verify-ledger exits 0 only for an intact chain. A broken chain, or a database
+that is missing or cannot be read, exits 1.
+
 Run with POSTCONDITION_DB=/path/to/postcondition.db to choose the local database.
 Private and local HTTP targets are blocked unless POSTCONDITION_ALLOW_PRIVATE=1.
 `;
 
 function print(value: unknown): void {
   process.stdout.write(`${JSON.stringify(value, null, 2)}\n`);
+}
+
+function errorMessage(error: unknown): string {
+  return error instanceof Error ? error.message : String(error);
+}
+
+// verify-ledger must never pass on a ledger it did not read. Opening the store
+// would create a missing database and migrate an empty file into an empty, valid
+// ledger, so check read-only first that a Postcondition ledger is actually there.
+function assertLedgerReadable(path: string): void {
+  if (!existsSync(path)) {
+    throw new Error(`No Postcondition database at ${path}. Set POSTCONDITION_DB to the ledger you want to verify.`);
+  }
+  let db: Database.Database | undefined;
+  try {
+    db = new Database(path, { readonly: true, fileMustExist: true });
+    const table = db.prepare("SELECT name FROM sqlite_master WHERE type = 'table' AND name = 'observations'").get();
+    if (!table) throw new Error('it has no receipt ledger table');
+  } catch (error) {
+    throw new Error(`${path} is not a readable Postcondition database: ${errorMessage(error)}`);
+  } finally {
+    db?.close();
+  }
+}
+
+function verifyLedger(runtime: PostconditionRuntime): LedgerVerification {
+  try {
+    return runtime.verifyLedger();
+  } catch (error) {
+    throw new Error(`Could not read every receipt in the ledger: ${errorMessage(error)}`);
+  }
 }
 
 async function jsonInput(values: { json?: string; file?: string }): Promise<unknown> {
@@ -33,22 +70,28 @@ async function jsonInput(values: { json?: string; file?: string }): Promise<unkn
   return JSON.parse(raw) as unknown;
 }
 
-export async function runCli(argv: string[]): Promise<void> {
+/** Runs one CLI command and resolves to the process exit code. */
+export async function runCli(argv: string[]): Promise<number> {
   const command = argv[0] ?? 'help';
   if (['help', '--help', '-h'].includes(command)) {
     process.stdout.write(HELP);
-    return;
+    return 0;
   }
   if (command === '--version' || command === '-v' || command === 'version') {
     process.stdout.write(`${POSTCONDITION_VERSION}\n`);
-    return;
+    return 0;
   }
+  if (command === 'verify-ledger') assertLedgerReadable(getDefaultDbPath());
 
   const runtime = new PostconditionRuntime();
   try {
     switch (command) {
       case 'status': print(runtime.status()); break;
-      case 'verify-ledger': print(runtime.verifyLedger()); break;
+      case 'verify-ledger': {
+        const result = verifyLedger(runtime);
+        print(result);
+        return result.valid === true ? 0 : 1;
+      }
       case 'get': {
         const id = argv[1];
         if (!id) throw new Error('Usage: postcondition get <id>');
@@ -112,4 +155,5 @@ export async function runCli(argv: string[]): Promise<void> {
   } finally {
     runtime.close();
   }
+  return 0;
 }

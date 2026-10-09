@@ -182,7 +182,7 @@ runtime.close();
 
 ```bash
 git clone https://github.com/christian140903-sudo/postcondition-mcp && cd postcondition-mcp
-npm ci && npm test        # expected: 53 passing (last verified 2026-10-08, Node 22, fresh clone)
+npm ci && npm test        # expected: 55 passing (last verified 2026-10-09, Node 22, fresh clone)
 ```
 
 The tests cover the SDK, SQLite persistence, receipt mutation, the CLI, an
@@ -202,7 +202,7 @@ export POSTCONDITION_DB="$PWD/demo.db"
 node dist/src/index.js define --file examples/file-exists.json   # prints a contract id
 node dist/src/index.js check pc_...                              # "verdict": "violated" (./dist/release.tgz does not exist)
 node -e "require('better-sqlite3')(process.env.POSTCONDITION_DB).prepare(\"UPDATE observations SET verdict = 'satisfied'\").run()"
-node dist/src/index.js verify-ledger                             # "valid": false, "firstInvalidId": "obs_..."
+node dist/src/index.js verify-ledger                             # "valid": false, "firstInvalidId": "obs_...", exit code 1
 ```
 
 Further checks: `npm run test:coverage` (coverage report) and
@@ -224,9 +224,11 @@ runs the CLI and imports the SDK).
   authenticated API verifiers.
 - **It does not turn attestations into observations.** Manual and self-attested
   receipts stay labelled as such.
-- **It does not fail the process on a broken chain.** In 0.1.0,
-  `verify-ledger` reports `"valid": false` in its JSON output but exits with
-  code 0; scripts must read the `valid` field.
+- **The npm release 0.1.0 does not fail the process on a broken chain.** Its
+  `verify-ledger` reports `"valid": false` but exits with code 0, so scripts
+  using that release must read the `valid` field. The code in this repository
+  exits with code 1 on a broken chain or an unreadable database (*Unreleased* in
+  the [changelog](./CHANGELOG.md)).
 
 The full list is in [LIMITATIONS.md](./docs/LIMITATIONS.md); the threat model
 is in [SECURITY-MODEL.md](./docs/SECURITY-MODEL.md).

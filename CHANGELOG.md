@@ -6,6 +6,16 @@ All notable changes to this project are documented here. The format follows
 
 ## [Unreleased]
 
+### Fixed
+
+- `postcondition verify-ledger` now exits with code 1 when the receipt chain is
+  broken (`"valid": false`) and exits 0 only for an intact chain. It also exits 1
+  when the database is missing, is not a Postcondition database, or a receipt
+  cannot be read; it no longer creates or migrates a database at the path it
+  was asked to verify. Scripts and CI steps that relied on exit code 0 after a
+  failed check now see 1. The JSON on stdout and the MCP tool
+  `postcondition_verify_ledger` are unchanged.
+
 ### Security
 
 - Raise the `@modelcontextprotocol/sdk` floor to `^1.32.1` and refresh the
