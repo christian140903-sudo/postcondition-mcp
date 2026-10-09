@@ -6,6 +6,8 @@ Postcondition `0.1` intentionally has a small verification surface.
 - `verify-ledger` does not notice deleted receipts at the end of the chain.
   Removing the newest receipts, or all of them, leaves a shorter chain that
   still verifies, because nothing outside the database records its length.
+- Contract rows (statement, verifier, state) are not part of the hash chain.
+  `verify-ledger` checks receipts only and does not notice changes to them.
 - Retraction metadata is preserved by the application but is not yet a separate
   hash-chained ledger event.
 - HTTP checks are public unauthenticated GETs; there are no headers, cookies,
