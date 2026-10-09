@@ -50,7 +50,9 @@ explain a mismatch. Choose a non-sensitive JSON pointer.
 
 Hash chaining detects mutation when the attacker has not recomputed the full
 chain. Anyone with write access to both the database and this program can forge
-a new local chain. Future signed checkpoints may raise that boundary; until
+a new local chain. Deleting the newest receipts needs no recomputation and is
+not detected either, because nothing outside the database records the length
+of the chain. Future signed checkpoints may raise that boundary; until
 then, do not describe receipts as third-party notarization or non-repudiation.
 
 ## Reporting

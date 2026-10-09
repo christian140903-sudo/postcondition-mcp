@@ -217,8 +217,9 @@ runs the CLI and imports the SDK).
   evidence digest and the prior receipt hash, so `verify-ledger` detects
   modified evidence, modified receipt fields, reordered receipts, or a broken
   link in the local chain. Someone who can rewrite the database and recompute
-  the entire chain is not detected. Signed checkpoints and external anchors are
-  not implemented.
+  the entire chain is not detected, and neither is deleting the newest
+  receipts, which needs no recomputation. Signed checkpoints and external
+  anchors are not implemented.
 - **It does not reach private or authenticated systems by default.** HTTP checks
   are unauthenticated public GETs; there are no database, cloud or
   authenticated API verifiers.

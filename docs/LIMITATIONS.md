@@ -3,6 +3,9 @@
 Postcondition `0.1` intentionally has a small verification surface.
 
 - Receipt hashes are locally verifiable but not externally signed or anchored.
+- `verify-ledger` does not notice deleted receipts at the end of the chain.
+  Removing the newest receipts, or all of them, leaves a shorter chain that
+  still verifies, because nothing outside the database records its length.
 - Retraction metadata is preserved by the application but is not yet a separate
   hash-chained ledger event.
 - HTTP checks are public unauthenticated GETs; there are no headers, cookies,
