@@ -44,6 +44,9 @@ The evidence object is canonicalized and hashed. The receipt is then
 canonicalized with its evidence digest and the previous receipt hash and hashed
 again. Ledger verification walks from the first observation to the last.
 
-The chain is global rather than per contract so deleting or reordering receipts
-across contracts breaks continuity. See `LIMITATIONS.md` for the distinction
-between this local integrity check and externally anchored signatures.
+The chain is global rather than per contract, so reordering receipts, or
+deleting a receipt that still has a later one after it, breaks continuity,
+also when the receipts belong to different contracts. Deleting the newest
+receipts is not detected. See `LIMITATIONS.md` for that gap and for the
+distinction between this local integrity check and externally anchored
+signatures.
